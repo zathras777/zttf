@@ -7,7 +7,7 @@ It was developed using Python 3.4 and will work to a degree with Python 2 it nee
 
 ## Simple Usage
 
-'''python
+```python
 >>> from zttf.ttfile import TTFile
 >>> font_file = TTFile('DroidSans.ttf')
 >>> font_file.is_valid
@@ -21,11 +21,11 @@ Droid Sans
 DroidSans
 >>> face.italic_angle
 0
-'''
+```
 
 When used with a font collection, there will be multiple faces available.
 
-'''python
+```python
 >>> from zttf.ttfile import TTFile
 >>> font_file = TTFile('Futura.ttc')
 >>> font_file.is_valid
@@ -42,11 +42,11 @@ Futura-MediumItalic
 Futura-CondensedMedium
 >>> font_file.faces[3].name
 Futura-CondensedExtraBold
-'''
+```
 
 Subsetting is done by passing in a subset of the characters desired. All required glyphs will be found and copied into the new file.
 
-'''python
+```python
 >>> from zttf.ttfile import TTFile
 >>> font_file = TTFile('Futura.ttc')
 >>> subset = [ord('H'), ord('e'), ord('l'), ord('o')]
@@ -55,5 +55,5 @@ Subsetting is done by passing in a subset of the characters desired. All require
 ...
 >>> with open('new_font.ttf', 'wb') as fh:
         fh.write(sub_font.output())
-'''
+```
 
