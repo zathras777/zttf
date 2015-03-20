@@ -52,3 +52,10 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Ignore PyCharm stuff
+.idea
+
+# Ignore any fonts copied while testing!
+*.ttf
+
