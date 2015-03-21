@@ -98,15 +98,14 @@ def binary_search_parameters(length):
     """ The TTF specification has several places that require binary search
         parameters. For an example look at the CMAP Format 4 table.
     :param length: The range over which the search will be performed.
-    :return: The 3 parameters required.
+    :return: The 2 parameters required.
     """
     search_range = 2
     entry_selector = 1
     while search_range * 2 <= length:
         search_range *= 2
         entry_selector += 1
-    search_range *= 2
-    return entry_selector, search_range, 2 * length - search_range
+    return search_range, entry_selector
 
 
 class Range:

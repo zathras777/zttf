@@ -16,8 +16,9 @@ class TestUtils(unittest.TestCase):
 
     def test_binary_parameters(self):
         cases = {
-            39: (5, 64, 14),
-            10: (3, 16, 4)
+            39: (32, 5),
+            10: (8, 3),
+            19: (16, 4)
         }
         for n, result in cases.items():
             self.assertEqual(binary_search_parameters(n), result)

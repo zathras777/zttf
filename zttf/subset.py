@@ -118,7 +118,7 @@ class TTFSubset:
         self.cmap_ranges[-1].iddelta = 0
 
         seg_count = len(self.cmap_ranges)
-        src_range, entry_selector, range_shift = binary_search_parameters(seg_count * 2)
+        src_range, entry_selector = binary_search_parameters(seg_count * 2)
         length = 16 + 8 * seg_count + len(self.glyph_to_char) + 1
 
         data = [
@@ -195,7 +195,8 @@ class TTFSubset:
         st.coverage = 1
         kern.write(st.as_bytes())
         kern.write(pack(">H", len(entries)))
-        kern.write(pack(">HHH", *binary_search_parameters(len(entries))))
+        src_rng, sel = binary_search_parameters(len(entries))
+        kern.write(pack(">HHH", src_rng, sel, len(entries) - sel * calcsize(">HHH")))
         for key, diff in entries.items():
             kern.write(pack(">HHh", key[0], key[1], diff))
 
@@ -220,7 +221,9 @@ class TTFSubset:
         header.version_raw = 0x00010000
 
         output = BytesIO()
-        header.entry_selector, header.search_range, header.range_shift = binary_search_parameters(len(self.tables))
+        header.search_range, header.entry_selector = binary_search_parameters(len(self.tables))
+        header.search_range *= 16
+        header.range_shift = len(self.tables) * 16 - header.search_range
         output.write(header.as_bytes())
 
         head_offset = 0
