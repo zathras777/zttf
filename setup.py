@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from os import path
 from zttf import __version__
 
@@ -32,5 +32,6 @@ setup(
         'Programming Language :: Python :: 3.4',
     ],
     keywords='fonts truetype ttf',
-    packages=['zttf']
+    packages=find_packages(exclude=['tests']),
+    test_suite='tests'
 )

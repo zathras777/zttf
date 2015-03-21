@@ -91,26 +91,22 @@ def fixed_version(num):
     :param num: fixed 16:16 floating point number as a 32-bit unsigned integer
     :return: version number (float)
     """
-    if num == 0x00005000:
-        return 0.5
-    elif num == 0x00010000:
-        return 1.0
-    elif num == 0x00020000:
-        return 2.0
-    elif num == 0x00025000:
-        return 2.5
-    elif num == 0x00030000:
-        return 3.0
-    return num
+    return float("{:04x}.{:04x}".format(num >> 16, num & 0x0000ffff))
 
 
 def binary_search_parameters(length):
-    search_range = 1
-    entry_selector = 0
+    """ The TTF specification has several places that require binary search
+        parameters. For an example look at the CMAP Format 4 table.
+    :param length: The range over which the search will be performed.
+    :return: The 3 parameters required.
+    """
+    search_range = 2
+    entry_selector = 1
     while search_range * 2 <= length:
         search_range *= 2
         entry_selector += 1
-    return entry_selector, search_range, length - search_range
+    search_range *= 2
+    return entry_selector, search_range, 2 * length - search_range
 
 
 class Range:
