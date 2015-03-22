@@ -58,4 +58,4 @@ target/
 
 # Ignore any fonts copied while testing!
 *.ttf
-
+extra/

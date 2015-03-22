@@ -220,7 +220,7 @@ class TTF_hhea(PackedFormat):
         {'name': 'line_gap', 'format': 'h'},
         {'name': 'advance_width_max', 'format': 'H'},
         {'name': 'min_left_side_bearing', 'format': 'h'},
-        {'name': 'min_right_dide_brearing', 'format': 'h'},
+        {'name': 'min_right_side_bearing', 'format': 'h'},
         {'name': 'x_max_extant', 'format': 'h'},
         {'name': 'caret_slope_rise', 'format': 'h'},
         {'name': 'caret_slope_run', 'format': 'h'},
@@ -292,6 +292,19 @@ class TTF_maxp(PackedFormat):
     FORMAT = [
         {'name': 'version', 'format': 'I', 'convert': fixed_version},
         {'name': 'num_glyphs', 'format': 'H'},
+        {'name': 'max_points', 'format': 'H'},
+        {'name': 'max_contours', 'format': 'H'},
+        {'name': 'max_component_points', 'format': 'H'},
+        {'name': 'max_component_contours', 'format': 'H'},
+        {'name': 'max_zones', 'format': 'H'},
+        {'name': 'max_twilight_points', 'format': 'H'},
+        {'name': 'max_storage', 'format': 'H'},
+        {'name': 'max_functiondefs', 'format': 'H'},
+        {'name': 'max_instructiondefs', 'format': 'H'},
+        {'name': 'max_stack_elements', 'format': 'H'},
+        {'name': 'max_size_of_instructions', 'format': 'H'},
+        {'name': 'max_component_elements', 'format': 'H'},
+        {'name': 'max_component_depth', 'format': 'H'},
     ]
 
 

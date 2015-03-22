@@ -16,6 +16,7 @@ if __name__ == '__main__':
     print(t.faces[0].font_family)
     print(t.faces[0].name)
     print(t.faces[0].italic_angle)
+    print(t.faces[0].get_name_attr(10))
 
     subset = [ord('H'), ord('e'), ord('l'), ord('o')]
     font_subset = t.faces[0].make_subset(subset)

@@ -22,6 +22,7 @@ class TTFSubset:
 
         self.required_glyphs = [0]
         self.metrics = []
+        self.max_contours = 0
 
         self.fh = None
 
@@ -57,7 +58,7 @@ class TTFSubset:
 
         self.glyph_map = {}
         for rg in self.required_glyphs:
-            glyph = len(self.glyph_map) + 1
+            glyph = len(self.glyph_map)
             self.glyph_map[rg] = glyph
             if rg in self.orig_glyph_to_char:
                 for cc in self.orig_glyph_to_char[rg]:
@@ -84,13 +85,20 @@ class TTFSubset:
 
         hhea = self.parent.copy_table(b'hhea')
         hhea.number_of_metrics = len(self.metrics)
+        hhea.advance_width_max = 0
+        hhea.min_left_side_bearing = 0
+        # todo calculate min_right_side_bearing...
+        for (aw, lsb) in self.metrics:
+            hhea.advance_width_max = max(hhea.advance_width_max, aw)
+            hhea.min_left_side_bearing = min(hhea.min_left_side_bearing, lsb * -1)
         self.start_table(b'hhea', hhea.as_bytes())
 
         maxp = self.parent.copy_table(b'maxp')
-        maxp.b_glyphs = len(self.required_glyphs)
+        maxp.num_glyphs = len(self.required_glyphs)
+        maxp.max_contours = self.max_contours
         self.start_table(b'maxp', maxp.as_bytes())
 
-        self.start_table(b'os2', self.parent.copy_table(b'os2').as_bytes())
+        self.start_table(b'OS/2', self.parent.copy_table(b'os2').as_bytes())
         # todo - is it worth finding a way to subset the GPOS and LTSH tables?
 
     def build_cmap_ranges(self):
@@ -149,13 +157,16 @@ class TTFSubset:
     def get_glyphs(self):
         locations = []
         self.metrics = []
+        self.max_contours = 0
         buff = self.start_table(b'glyf')
         for g in self.required_glyphs:
             locations.append(int(buff.tell() / 2))
             data = self.parent.get_glyph_data(g)
             if data == b'':
                 continue
-            if unpack(">h", data[:2])[0] == -1:
+            n_contours = unpack(">h", data[:2])[0]
+            self.max_contours = max(self.max_contours, n_contours)
+            if n_contours == -1:
                 # need to adjust glyph index...
                 pos = 10
                 while True:
@@ -209,9 +220,9 @@ class TTFSubset:
 
         self.find_glyph_subset()
         self.add_kern_data()
-        self.copy_tables()
         self.add_cmap_table()
         self.get_glyphs()
+        self.copy_tables()
 #        self.dump_tables()
 
         self.fh.close()

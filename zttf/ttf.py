@@ -69,7 +69,7 @@ class TTFont(object):
         if item in self.COMMON_DATA:
             how = self.COMMON_DATA[item]
             if how[0] == b'name':
-                return self.get_name_table(*how[1:])
+                return self.get_name_attr(*how[1:])
             if len(how) > 2:
                 return self.get_table_attr(*how[:3])
             return self.get_table_attr(*how)
@@ -121,7 +121,12 @@ class TTFont(object):
             return default
         return getattr(self.tables[tbl], attr, default)
 
-    def get_name_table(self, n_attr, default=None):
+    def get_name_attr(self, n_attr, default=None):
+        """ Return the string from the name table with the number given.
+        :param n_attr: Number of name entry to return
+        :param default: Return value if no entry is available (deafult is None).
+        :return: String from name table. default if not available
+        """
         if b'name' not in self.tables:
             return default
         return self.tables[b'name'].get_name(n_attr, default)
