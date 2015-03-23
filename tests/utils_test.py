@@ -1,6 +1,7 @@
 import unittest
+import struct
 
-from zttf.utils import fixed_version, binary_search_parameters
+from zttf.utils import fixed_version, binary_search_parameters, ttf_checksum
 
 
 class TestUtils(unittest.TestCase):
@@ -22,3 +23,10 @@ class TestUtils(unittest.TestCase):
         }
         for n, result in cases.items():
             self.assertEqual(binary_search_parameters(n), result)
+
+    def test_checksum(self):
+        data = struct.pack(">12I", *range(0, 12))
+        self.assertEqual(len(data), 48)
+        self.assertEqual(ttf_checksum(data), 66)
+        self.assertEqual(ttf_checksum(struct.pack(">12I", *range(1000, 13000, 1000))), 78000)
+        self.assertEqual(ttf_checksum(struct.pack(">512I", *range(1024, 1024 * 2048, 4096))), 0x1FF80000)
