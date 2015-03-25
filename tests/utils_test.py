@@ -1,7 +1,7 @@
 import unittest
 import struct
 
-from zttf.utils import fixed_version, binary_search_parameters, ttf_checksum
+from zttf.utils import fixed_version, binary_search_parameters, ttf_checksum, glyph_more_components, glyf_skip_format
 
 
 class TestUtils(unittest.TestCase):
@@ -30,3 +30,15 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(ttf_checksum(data), 66)
         self.assertEqual(ttf_checksum(struct.pack(">12I", *range(1000, 13000, 1000))), 78000)
         self.assertEqual(ttf_checksum(struct.pack(">512I", *range(1024, 1024 * 2048, 4096))), 0x1FF80000)
+
+    def test_component_flag(self):
+        self.assertTrue(glyph_more_components((1 << 5)))
+        self.assertFalse(glyph_more_components((1 << 4)))
+
+    def test_skip_format(self):
+        self.assertEqual(glyf_skip_format((1 << 0)), ">I")
+        self.assertEqual(glyf_skip_format(0), ">H")
+        self.assertEqual(glyf_skip_format((1 << 3)), ">HH")
+        self.assertEqual(glyf_skip_format((1 << 3) | (1 << 0)), ">IH")
+        self.assertEqual(glyf_skip_format((1 << 7)), ">HII")
+
