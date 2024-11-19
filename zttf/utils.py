@@ -166,7 +166,7 @@ def read_list_uint32(fh, n):
 
 
 def ttf_checksum(data):
-    data += b'\0' * (len(data) % 4)
+    data += b'\0' * (4 - (len(data) % 4))
     n_uint32 = int(len(data) / 4)
     chksum = 0
     for val in unpack(">{}I".format(n_uint32), data):
